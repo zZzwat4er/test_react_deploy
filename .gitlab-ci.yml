@@ -1,15 +1,10 @@
 image: python:3.11-slim
 
 stages:
-  - build
   - deploy
-
-build_job:
-  stage: build
-  script:
-    - pip install -r requirements.txt
 
 deploy_job:
   stage: deploy
   script:
+    - pip install -r requirements.txt
     - python main.py
