@@ -1,4 +1,5 @@
 import logging
+import concurrent.futures
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
@@ -30,7 +31,10 @@ async def create_task(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     # Save task_text to your database or data store
     # You can use context.user_data to store temporary data if needed
     # Replace this with your database logic
-    context.user_data['task'] = user_msg
+    if 'task' in context.user_data:
+        context.user_data['task'].extend([user_msg])
+    else:
+        context.user_data['task'] = [user_msg]
 
     reply_keyboard = [["Yes", "No"]]
 
@@ -51,6 +55,8 @@ async def confirm_task(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
         # Save the task to your database or data store here
         # Replace this with your database logic
         task_creation_status = 'Task created.'
+    else:
+        context.user_data['task'].pop()
 
     await update.message.reply_text(task_creation_status)
 
@@ -58,8 +64,11 @@ async def confirm_task(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
 
 async def show_tasks(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    report = "You have next tasks:\n\n"
+    for i, task in enumerate(context.user_data['task']):
+        report += f"{i + 1}. {task}\n\n"
     await update.message.reply_text(
-        f"I picking tasks randomly, here is one: {context.user_data['task']}"
+        report
     )
 
     return TASK
@@ -82,8 +91,9 @@ def main():
 
     application.add_handler(conv_handler)
 
-    # Start the bot
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Start the bot
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == '__main__':
