@@ -1,21 +1,15 @@
+image: python:3.11-slim
+
 stages:
   - build
   - deploy
 
-before_script:
-  - apt-get update -qy
-  - apt-get install -y python3 python3-pip
-  - sudo apt install python3-venv
-
-build:
+build_job:
   stage: build
   script:
-    - python3 -m venv venv
-    - source venv/bin/activate
     - pip install -r requirements.txt
 
-deploy:
+deploy_job:
   stage: deploy
   script:
-    - source venv/bin/activate
-    - python your_bot_script.py
+    - python main.py
