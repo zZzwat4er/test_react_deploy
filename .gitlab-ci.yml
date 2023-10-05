@@ -5,6 +5,7 @@ stages:
 before_script:
   - apt-get update -qy
   - apt-get install -y python3 python3-pip
+  - sudo apt install python3-venv
 
 build:
   stage: build
