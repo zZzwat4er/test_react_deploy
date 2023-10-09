@@ -18,6 +18,7 @@ variables:
 docker_publish:
   image: docker:latest
   stage: publish
+  only: main
   services:
     - docker:dind
   script:
