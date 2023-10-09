@@ -3,11 +3,11 @@ const express = require('express');
 const axios = require('axios');
 require("dotenv").config();
 
-const usersUrl = process.env.USERURL;
-const tasksUrl = process.env.TASKURl;
-const token = process.env.BOTTOKEN;
-const taskstelgramUrl = process.env.TASKTELGRAMURL;
-const port = process.env.PORT;
+const usersUrl = "https://odd-tan-ox-wig.cyclic.app/users";
+const tasksUrl = "https://odd-tan-ox-wig.cyclic.app/tasks";
+const token = "6524677471:AAESlMm4JIwXLPmKWFpfVBEJ8kYc2HNg874";
+const taskstelgramUrl = "https://odd-tan-ox-wig.cyclic.app/tasks/telegram";
+const port = 3000;
 
 
 const bot = new TelegramBot(token, {polling: true});
