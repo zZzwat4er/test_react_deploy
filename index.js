@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const axios = require('axios');
@@ -8,7 +7,7 @@ const usersUrl = "https://odd-tan-ox-wig.cyclic.app/users";
 const tasksUrl = "https://odd-tan-ox-wig.cyclic.app/tasks";
 const token = "6524677471:AAESlMm4JIwXLPmKWFpfVBEJ8kYc2HNg874";
 const taskstelgramUrl = "https://odd-tan-ox-wig.cyclic.app/tasks/telegram";
-const port = 3002;
+const port = 3000;
 
 
 const bot = new TelegramBot(token, {polling: true});
@@ -100,21 +99,3 @@ bot.on('message', async (msg) => {
     }
   });
   
-=======
-const express = require('express');
-require("dotenv").config();
-const app = express();
-const port = process.env.PORT || 3002;
-
-app.use(express.json());
-
-const userController = require('./User');
-const taskController = require('./Tasks');
-
-app.use('/users', userController);
-app.use('/tasks', taskController);
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
->>>>>>> api-server
