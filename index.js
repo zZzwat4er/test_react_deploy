@@ -62,21 +62,24 @@ bot.onText(/\/view/, async (msg) => {
     if (tasks.length === 0) {
       bot.sendMessage(chatId, 'No tasks available.');
     } else {
+      let taskNumber = 1;
       const taskMessages = tasks.map((task) => {
         const senderurl = task.senderurl || '';
-        const taskText = `${task.message}${senderurl ? ' @' + senderurl : ''}`;
 
-        // Create an inline keyboard with a button for each task
-        const keyboard = {
-          inline_keyboard: [
-            [
-              { text: 'Edit', callback_data: `task:${task.id}` }
-            ]
-          ]
-        };
-        // Send the task message with the inline keyboard
-        bot.sendMessage(chatId, taskText, { reply_markup: JSON.stringify(keyboard) });
-      });
+        const taskMessage = `${taskNumber}. ${task.message}${senderurl ? ' @' + senderurl : ''}`;
+        ++taskNumber;
+
+        return taskMessage;
+      }).join('\n\n\n'); // Join the messages with line breaks
+      
+      // Create an inline keyboard with a button for all tasks
+      const keyboard = {
+        inline_keyboard: [
+          tasks.map((task) => ({ text: '', callback_data: `task:${task.id}` }))
+        ]
+      };
+
+      bot.sendMessage(chatId, taskMessages, { reply_markup: JSON.stringify(keyboard) });
     }
 
   } catch (error) {
@@ -94,6 +97,8 @@ bot.on('message', async (msg) => {
   const senderId = msg.from.id;
   const forwarder = msg.forward_from;
   let sendersurl = null;
+  
+  text.trim()
 
   if (forwarder ) {
     console.log('foward true')
