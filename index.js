@@ -7,6 +7,7 @@ const { Extra, Markup } = require('node-telegram-bot-api');
 const usersUrl = "https://odd-tan-ox-wig.cyclic.app/users";
 const tasksUrl = "https://odd-tan-ox-wig.cyclic.app/tasks";
 const token = "6524677471:AAESlMm4JIwXLPmKWFpfVBEJ8kYc2HNg874";
+// const token = "6548185763:AAGWd-twLcwMWRxe6O69Bd5s0G4kmfBtWA0"
 const taskstelgramUrl = "https://odd-tan-ox-wig.cyclic.app/tasks/telegram";
 const attachmentURl = "https://odd-tan-ox-wig.cyclic.app/attachments"
 const port = 3000;
@@ -45,8 +46,31 @@ bot.onText(/\/start/, async (msg) => {
   .catch((error) => {
     console.error('Error posting data to API:', error);
   });
-  
   bot.sendMessage(chatId, 'Welcome! Send a task.');
+});
+
+bot.on('callback_query', async (callbackQuery) => {
+  const chatId = callbackQuery.message.chat.id;
+  const taskId = callbackQuery.data.split(':')[1]; // Extract the task ID
+  const action = callbackQuery.data.split(':')[2]; // Extract the action ("done" or "edit")
+
+  if (action === 'done') {
+    // Update the task status to 'DONE' in the backend
+    console.log(taskId)
+    try {
+      const response = await axios.delete(`${tasksUrl}/${taskId}`);
+
+      // Check if the task status was updated successfully
+      if (response.status === 200) {
+        bot.sendMessage(chatId, `Task ${taskId} is marked as 'Done'.`);
+      } else {
+        bot.sendMessage(chatId, `Failed to mark task ${taskId} as 'Done'.`);
+      }
+    } catch (error) {
+      console.error('Error updating task status:', error);
+      bot.sendMessage(chatId, 'An error occurred while updating the task status.');
+    }
+  }
 });
 
 
@@ -62,35 +86,34 @@ bot.onText(/\/view/, async (msg) => {
     if (tasks.length === 0) {
       bot.sendMessage(chatId, 'No tasks available.');
     } else {
-      let taskNumber = 1;
-      const taskMessages = tasks.map((task) => {
-        const senderurl = task.senderurl || '';
+      tasks.forEach((task, index) => {
+        const taskMessage = `${index + 1}. ${task.message}`;
 
-        const taskMessage = `${taskNumber}. ${task.message}${senderurl ? ' @' + senderurl : ''}`;
-        ++taskNumber;
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: 'Done', callback_data: `task:${task.taskid}:done` },
+              { text: 'Edit', callback_data: `task:${task.taskid}:edit`, switch_inline_query: task.message },
+            ],
+          ],
+        };
 
-        return taskMessage;
-      }).join('\n\n\n'); // Join the messages with line breaks
-      
-      // Create an inline keyboard with a button for all tasks
-      const keyboard = {
-        inline_keyboard: [
-          tasks.map((task) => ({ text: '', callback_data: `task:${task.id}` }))
-        ]
-      };
+        const sendMessageOptions = {
+          reply_markup: JSON.stringify(keyboard),
+        };
 
-      bot.sendMessage(chatId, taskMessages, { reply_markup: JSON.stringify(keyboard) });
+        bot.sendMessage(chatId, taskMessage, sendMessageOptions);
+      });
     }
-
   } catch (error) {
     console.error(error);
     bot.sendMessage(chatId, 'An error occurred while fetching tasks.');
   }
 });
-  
 
-//issue 1 for users with enabled security feature to hide nickname, i will get a null object. so it won't work
 
+
+//  issue 1 for users with enabled security feature to hide nickname, i will get a null object. so it won't work
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text;
@@ -126,8 +149,6 @@ bot.on('message', async (msg) => {
         .catch((error) => {
           console.error('Error posting data to API:', error);
         });
-  
-    
     }
   });
   
