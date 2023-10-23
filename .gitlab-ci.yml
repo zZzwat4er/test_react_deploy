@@ -18,10 +18,14 @@ variables:
 docker_publish:
   image: docker:latest
   stage: publish
-  only: 
-    - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
+        - bot/*
   services:
     - docker:dind
+  before_script:
+    - cd bot
   script:
     - docker build -t $TAG_COMMIT -t $TAG_LATEST .
     - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_ACCESS_TOKEN
