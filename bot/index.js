@@ -54,17 +54,23 @@ bot.on('callback_query', async (callbackQuery) => {
   const taskId = callbackQuery.data.split(':')[1]; // Extract the task ID
   const action = callbackQuery.data.split(':')[2]; // Extract the action ("done" or "edit")
 
+    const status = 'DONE'
+    const url = `${'https://odd-tan-ox-wig.cyclic.app/tasks/status'}/${taskId}`;
+  
+
+
   if (action === 'done') {
     // Update the task status to 'DONE' in the backend
     console.log(taskId)
     try {
-      const response = await axios.delete(`${tasksUrl}/${taskId}`);
-
+      
+      const response = await axios.put(url,{status});
+      
       // Check if the task status was updated successfully
       if (response.status === 200) {
-        bot.sendMessage(chatId, `Task ${taskId} is marked as 'Done'.`);
+        bot.sendMessage(chatId, `Task is marked as 'Done'.`);
       } else {
-        bot.sendMessage(chatId, `Failed to mark task ${taskId} as 'Done'.`);
+        bot.sendMessage(chatId, `Failed to mark task as 'Done'.`);
       }
     } catch (error) {
       console.error('Error updating task status:', error);
@@ -81,11 +87,14 @@ bot.onText(/\/view/, async (msg) => {
   try {
     const url = `${taskstelgramUrl}/${telegramid}`;
     const response = await axios.get(url);
-    const tasks = response.data;
+    const Alltasks = response.data;
+
+    const tasks = Alltasks.filter(Alltasks=>Alltasks.status === 'NOT DONE');
 
     if (tasks.length === 0) {
       bot.sendMessage(chatId, 'No tasks available.');
-    } else {
+    }
+    else {
       tasks.forEach((task, index) => {
         const taskMessage = `${index + 1}. ${task.message}`;
 
@@ -124,12 +133,8 @@ bot.on('message', async (msg) => {
   text.trim()
 
   if (forwarder ) {
-    console.log('foward true')
       sendersurl =  forwarder.username;
   }
-  
-    console.log('Received message:', text);
-    console.log('sender url:', sendersurl);
   
     if (!msg.entities || msg.entities[0].type !== 'bot_command')
      {
