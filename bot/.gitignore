@@ -1,2 +1,7 @@
+<<<<<<< HEAD:.gitignore
+API-Server/node_modules/*
+
+=======
 node_modules/*
 .env
+>>>>>>> 3cfdeb038958ff21938e4261bd680be2ac842c9a:bot/.gitignore
