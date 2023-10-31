@@ -30,7 +30,7 @@ bot.onText(/\/start/, async (msg) => {
     const chatId = msg.chat.id;
     const userid = msg.from.id;
     const userName = msg.from.first_name + (msg.from.last_name ? ' ' + msg.from.last_name : '');
-
+    const welcomeMessage = 'Hi there! To add a task just send me a message or forward it from another chat. You can view your tasks using the /show command..';
     const userData = {
       telegramid: userid,
       username: userName,
@@ -46,7 +46,7 @@ bot.onText(/\/start/, async (msg) => {
   .catch((error) => {
     console.error('Error posting data to API:', error);
   });
-  bot.sendMessage(chatId, 'Welcome! Send a task.');
+  bot.sendMessage(chatId, welcomeMessage);
 });
 
 bot.on('callback_query', async (callbackQuery) => {
@@ -80,7 +80,15 @@ bot.on('callback_query', async (callbackQuery) => {
 });
 
 
-bot.onText(/\/view/, async (msg) => {
+
+bot.onText(/\/help/, async (msg) => {
+  const helpMessage = 'Hi there! To add a task just send me a message or forward it from another chat.\n\n Available Commands \n\n/show - View list of active tasks \n/completed - View list of completed tasks \n/help - Get help.'
+  bot.sendMessage(msg.chat.id, helpMessage);
+});
+
+
+
+bot.onText(/\/show/, async (msg) => {
   const chatId = msg.chat.id;
   const telegramid = msg.from.id;
 
@@ -92,7 +100,7 @@ bot.onText(/\/view/, async (msg) => {
     const tasks = Alltasks.filter(Alltasks=>Alltasks.status === 'NOT DONE');
 
     if (tasks.length === 0) {
-      bot.sendMessage(chatId, 'No tasks available.');
+      bot.sendMessage(chatId, 'No active tasks available.');
     }
     else {
       tasks.forEach((task, index) => {
