@@ -58,3 +58,27 @@ body {
 .Todo-Item ul li.Main-Text {
   overflow: hidden;
 }
+
+.Todo-Item .Edit-Options li {
+  margin: 5px;
+  display: inline-block;
+}
+
+.Todo-Item input {
+  font-size: 14px;
+}
+
+.Todo-Item .Accept-Options {
+  margin: 5px;
+}
+
+.Todo-Item button {
+  transition-duration: 0.4s;
+  width: 20%;
+  font-size: 16px;
+}
+
+.Todo-Item button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
