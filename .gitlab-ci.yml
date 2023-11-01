@@ -1,6 +1,7 @@
 stages:
 # - build
 # - test
+- lint
 - publish
 # - deploy
 
@@ -14,6 +15,32 @@ variables:
 #   script:
 #     - pip install -r ./tests/requirements.txt 
 #     - pytest ./
+
+bot_lint:
+  image: node:13.12.0-alpine
+  stage: lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - bot/*
+  before_script:
+    - cd bot
+    - npm install
+  script:
+    - npx eslint .
+
+web_lint:
+  image: node:18.18-alpine
+  stage: lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - web/*
+  before_script:
+    - cd web
+    - npm install
+  script:
+    - npx eslint .
 
 docker_publish:
   image: docker:latest
