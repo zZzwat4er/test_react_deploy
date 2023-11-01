@@ -18,7 +18,9 @@ export function TodoItem({ todo }) {
           setTodo(prev => prev.filter(e => e.taskId !== todo.taskId));
         }
       })
-      .catch(e => { });
+      .catch(e => {
+        console.log('Failed to delete task')
+      });
   }
 
   function toggleEdit() {

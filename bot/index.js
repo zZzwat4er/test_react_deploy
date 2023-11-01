@@ -13,11 +13,10 @@ const attachmentURl = "https://odd-tan-ox-wig.cyclic.app/attachments"
 const port = 3000;
 
 
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, { polling: true });
 
 const app = express();
-app.get('/',(req,res)=> 
-{
+app.get('/', (req, res) => {
   res.send('msg2task bot running');
 }
 );
@@ -137,15 +136,17 @@ bot.on('message', async (msg) => {
   const senderId = msg.from.id;
   const forwarder = msg.forward_from;
   let sendersurl = null;
-  
+
   text.trim()
 
-  if (forwarder ) {
-      sendersurl =  forwarder.username;
+  if (forwarder) {
+    sendersurl = forwarder.username;
   }
-  
-    if (!msg.entities || msg.entities[0].type !== 'bot_command')
-     {
+
+  console.log('Received message:', text);
+  console.log('sender url:', sendersurl);
+
+  if (!msg.entities || msg.entities[0].type !== 'bot_command') {
     const messageData = {
         message: text,
         status: 'NOT DONE',
