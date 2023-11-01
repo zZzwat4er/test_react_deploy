@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react'
-import Todo from '../models/Todo'
 import { useThemeParams } from '@vkruglikov/react-telegram-web-app'
 import axios, { HttpStatusCode } from 'axios';
 import { todoContext } from '../App';
@@ -7,12 +6,13 @@ import { todoContext } from '../App';
 export function TodoItem({ todo }) {
   let [isEditing, setIsEditing] = useState(false);
   let [editedMessage, setEditedMessage] = useState(todo.message);
-  let [sheme, params] = useThemeParams();
+  let [scheme, params] = useThemeParams();
 
   let setTodo = useContext(todoContext)
 
-  function deleteTodo() {
-    axios.delete(`https://odd-tan-ox-wig.cyclic.app/tasks/${todo.taskId}`)
+  function completeTodo() {
+    const status = 'DONE'
+    axios.put(`https://odd-tan-ox-wig.cyclic.app/tasks/status/${todo.taskId}`, {status})
       .then(res => {
         if (res.status !== HttpStatusCode.InternalServerError) {
           setTodo(prev => prev.filter(e => e.taskId !== todo.taskId));
@@ -71,10 +71,9 @@ export function TodoItem({ todo }) {
           <li>
             <div className='Edit-Options'>
               <li onClick={toggleEdit}>{"\u270E"}</li>
-              <li onClick={deleteTodo}>{"\u2705"}</li>
+              <li onClick={completeTodo}>{"\u2705"}</li>
             </div>
           </li>
-          {/* <li className='Status'>{todo.status}</li> */}
         </ul>
       )}
     </div>

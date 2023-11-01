@@ -21,7 +21,8 @@ function App() {
       const tasks = await axios.get(`https://odd-tan-ox-wig.cyclic.app/tasks/telegram/${user.id}`)
         .catch(e => setState([]));
       const tasksJson = await tasks.data
-      setState(tasksJson.map(e => Todo.from(e)));
+      const activeTasks = tasksJson.filter(tasksJson=>tasksJson.status === 'NOT DONE')
+      setState(activeTasks.map(e => Todo.from(e)));
     }
 
     if (user?.id) {
