@@ -31,6 +31,8 @@ export function TodoItem({ todo }) {
     axios
       .put(`https://odd-tan-ox-wig.cyclic.app/tasks/${todo.taskId}`, {
         message: editedMessage,
+        status: todo.status,
+        reminder: todo.reminder,
       })
       .then((res) => {
         if (res.status !== HttpStatusCode.InternalServerError) {

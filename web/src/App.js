@@ -28,7 +28,7 @@ function App() {
     if (user?.id) {
       fetchTasks();
     }
-  }, [user.id]);
+  }, [user?.id]);
 
 
 

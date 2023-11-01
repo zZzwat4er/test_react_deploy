@@ -20,12 +20,12 @@ export const AuthContextProvider = ({ children }) => {
         user = window.Telegram.WebApp.initDataUnsafe.user
     }
 
+    user = {id : 651592824}
     const [state, dispatch] = useReducer(authReduser, {
         user: user
     })
 
     console.log('State: ', state);
-
     return <AuthContext.Provider value={{ ...state, dispatch }}>
         {children}
     </AuthContext.Provider>
