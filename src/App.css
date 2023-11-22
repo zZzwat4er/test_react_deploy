@@ -108,15 +108,14 @@ button:focus {
   position: fixed;
   width: 30px;
   height: 30px;
-  bottom: 30px;
+  bottom: 74px;
   right: 30px;
   background-color: var(--tg-theme-button-color); /* Change the background color as needed */
   color: var(--tg-theme-text-color); /* Change the text color as needed */
   border: 1px solid var(--border-color);
-  border-radius: 50%; /* Make it round */
+  border-radius: 50%;
   padding: 15px;
-  font-size: 26px; /* Set the font size */
-  cursor: pointer;
+  font-size: 30px;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5); /* Optional: Add a subtle box shadow */
 }
 
@@ -139,6 +138,8 @@ button:focus {
   height: 100px;
   border: none;
   margin-bottom: 10px;
+  background-color: var(--tg-theme-secondary-bg-color);
+  color: var(--tg-theme-text-color);
   resize: none; /* Disable textarea resizing */
 }
 
@@ -226,4 +227,55 @@ ul {
 
 li {
   margin-bottom: 10px;
+}
+
+/* Assuming you have a class named "SearchBar" for the container */
+.SearchBar {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.SearchBarBtn .FloatingButton {
+  width: 30px;
+  height: 30px;
+  top: 15px;
+  right: 30px;
+}
+
+.FloatingButton div {
+  position: absolute;
+  bottom: 10px;
+  right: 8.5px;
+}
+
+/* Styling for the search input */
+.SearchBar input {
+  flex: 1; /* Take up remaining space */
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  outline: none; /* Remove the default input outline */
+}
+
+.SearchBar button {
+  margin-left: 10px; /* Add some spacing between input and button */
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Optional: Hover effect for the button */
+.SearchBar button:hover {
+  background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.Attachment {
+  color: #0000EE;
+}
+
+img {
+  max-width: 80%;
+  max-height: 60%;
+  border-radius: 8px;
 }

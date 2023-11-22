@@ -4,12 +4,15 @@ import { todoContext } from '../App';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { logEvent } from "firebase/analytics";
 
-export function CompletedItem({ todo, fetchTasks }) {
+export function CompletedItem({ todo, attachments, fetchTasks }) {
   const sender = todo.senderUrl ? "\n Sender: " + todo.senderUrl : '';
   const msg = todo.message + sender;
+  let [isAttachmentShow, setIsAttachmentShow] = useState(false);
 
   let setTodo = useContext(todoContext)
   const { analytics } = useAnalytics();
+
+  const TodoAttachments = attachments.filter(attachments => attachments.taskId === todo.taskId);
 
   function makeActiveSubmit() {
     axios
@@ -37,10 +40,25 @@ export function CompletedItem({ todo, fetchTasks }) {
       .catch((e) => {});
   }
 
+  const toggleAttachment = async () => {
+    setIsAttachmentShow(!isAttachmentShow);
+  }
+
   return (
     <div className='Todo-Item'>
         <ul >
           <li className='Main-Text'>{msg}</li>
+          <li className='Attachment'>
+            {(TodoAttachments.length > 0) ? (
+                <div>
+                  {isAttachmentShow ? (
+                    <img src={TodoAttachments[0].file} alt="attachment" onClick={toggleAttachment} />
+                  ) : (
+                    <div onClick={toggleAttachment}>see attachment</div>
+                  )}
+                </div>
+            ) : (<div></div>)}
+          </li>
           <li>
             <div className='Edit-Options'>
               <li onClick={makeActiveSubmit}>&#128260;</li>
